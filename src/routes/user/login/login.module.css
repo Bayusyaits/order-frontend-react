@@ -1,0 +1,20 @@
+.card {
+  max-width: 450px;
+  margin: 4px auto;
+  padding: 1.5rem;
+  text-align: center;
+}
+.heading {
+  font-size: 24px;
+  font-weight: 300;
+  color: var(--charcoal-color);
+}
+.logo {
+  width: 12rem;
+  margin: 3.5rem 1rem 3.25rem 1rem;
+}
+.name {
+  font-size: 2rem;
+  color: var(--charcoal-color);
+  margin-bottom: 1.5rem;
+}

@@ -1,0 +1,18 @@
+.dialogTitle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #cecece;
+}
+
+.modalPopup {
+    padding-left: 0px;
+    z-index: 10000;
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    width: 78.66px;
+    margin-left: 8px;
+}

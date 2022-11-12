@@ -1,0 +1,9 @@
+.container {
+  text-align: center;
+}
+.text {
+  padding-top: 14px;
+  padding-bottom: 20px;
+  font-size: 18px;
+  color: var(--charcoal-color);
+}

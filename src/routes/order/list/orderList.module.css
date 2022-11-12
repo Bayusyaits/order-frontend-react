@@ -1,0 +1,25 @@
+.paper {
+  padding: 16px;
+}
+
+.aboveTable {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  margin-right: 32px;
+}
+
+.bulkActionButton {
+  min-height: 32px;
+  min-width: 124px;
+}
+
+.tableWrapper {
+  overflow: auto;
+  padding-top: 8px;
+}

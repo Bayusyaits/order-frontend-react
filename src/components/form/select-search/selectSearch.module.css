@@ -1,0 +1,17 @@
+.formWrapper {
+    background-color: #ffff;
+}
+
+.formInput {}
+
+.label {}
+
+.icon {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+}
+
+.optionParent {}
+
+.optionChild {}

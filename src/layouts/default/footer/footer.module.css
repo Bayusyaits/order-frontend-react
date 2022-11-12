@@ -1,0 +1,46 @@
+.header {
+  padding: 9px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  box-shadow: 0 1px 3px #a4a4a4;
+}
+.header > div {
+  display: flex;
+  align-items: center;
+}
+.header > div:last-child {
+  padding-right: 4px;
+}
+.dashboardName {
+  margin-left: 12px;
+  margin-right: 16px;
+  padding: 2px;
+  font-size: 16px;
+  color: #333;
+  white-space: nowrap;
+}
+.select {
+  min-width: 200px;
+}
+.faint {
+  color: #7c7c7c;
+}
+.logoLink {
+  height: 38px;
+}
+.logo {
+  height: 38px;
+  width: 38px;
+}
+.email {
+  font-size: 13px;
+  margin-right: 6px;
+}
+.headerDivider {
+  width: 1px;
+  height: 36px;
+  margin: 0 12px;
+  background-color: #a0a0a0;
+}

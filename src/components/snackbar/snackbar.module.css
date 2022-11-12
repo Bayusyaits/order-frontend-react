@@ -1,0 +1,11 @@
+.snackbar {
+    position: fixed;
+    left: 50%;
+    bottom: 2%;
+    transform: translate(-50%, 0%);
+}
+
+.snackbarAlert {
+    background-color: #ffffffb5;
+    margin-bottom: 10px;
+}

@@ -1,0 +1,34 @@
+.grid {
+  min-height: calc(100vh - 56px);
+  display: grid;
+  grid-template-columns: 56px auto;
+}
+.nav {
+  background-color: #353b4c;
+}
+.main {
+  display: flex;
+  flex-direction: column;
+}
+.mainOutside {
+  min-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+}
+.route {
+  max-width: calc(100vw - 56px);
+  padding: 16px 20px 0 20px;
+  flex-grow: 1;
+}
+.mainOutside > .route {
+  max-width: none;
+}
+.footer {
+  margin: 1rem;
+  line-height: 1.5rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+.copyright {
+  color: #777;
+}
