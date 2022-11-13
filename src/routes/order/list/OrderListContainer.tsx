@@ -96,7 +96,7 @@ const OrderListContainer = () => {
     } else if (!transactionDate) {
       setError('transactionDate', { type: 'focus', message: 'Transaction Date harus diisi' })
     }
-    const obj = initialState
+    const p = { ...initialState }
     const items = []
     const d = initialState.items
     let totalQty = 0
@@ -122,17 +122,17 @@ const OrderListContainer = () => {
       }
     }
     if (data[`customerName`]) {
-      obj.customerName = data[`customerName`]
+      p.customerName = data[`customerName`]
     }
-    obj.totalCharge = totalCharge
-    obj.totalWeight = totalWeight
-    obj.number = Math.random().toString(4).substr(2, 9)
-    obj.totalQty = totalQty
+    p.totalCharge = totalCharge
+    p.totalWeight = totalWeight
+    p.number = Math.random().toString(4).substr(2, 9)
+    p.totalQty = totalQty
     if (transactionDate) {
-      obj.transactionDate = transactionDate
+      p.transactionDate = transactionDate
     }
-    obj.items = items
-    dispatch(orderSubmitPost(obj))
+    p.items = items
+    dispatch(orderSubmitPost(p))
   }
   const handleAdd = (k: number) => dispatch(orderItemAdd(k))
   const handleDelete = (k: number) => dispatch(orderItemDelete(k))

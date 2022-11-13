@@ -29,13 +29,13 @@ function generateUrl(urlString: string, params = {}, query?: Record<string, unkn
 
 function generateHeaders(contentType: string = 'application/json', lang: string = 'id') {
   const appSignature = import.meta.env.VITE_APP_APISIGNATURE
-  const { token } = getLoginData()
+  const loginData = getLoginData()
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': contentType,
     Accept: contentType,
     'Accept-Language': lang,
-    Authorization: `Bearer ${token ? token : ''}`,
+    Authorization: `Bearer ${loginData && loginData.token ? loginData.token : ''}`,
     'X-Signature': appSignature,
   }
   return headers
