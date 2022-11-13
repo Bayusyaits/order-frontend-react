@@ -1,17 +1,8 @@
-import React, {
-  useEffect,
-  useState,
-  createContext,
-  useContext,
-  useMemo,
-  useReducer,
-  useCallback,
-} from 'react'
-import produce, { Immutable } from 'immer'
-
+import { createContext, useContext } from 'react'
 export interface Props {
   isOpen?: boolean
   id?: string
+  showCode?: boolean
   size?: string
   isFix?: boolean
   isInput?: boolean
@@ -38,6 +29,7 @@ export const initialState: Props = {
   isFix: true,
   isInput: true,
   required: true,
+  showCode: false,
   classesName: '',
   autocomplete: '',
   placeholder: '',

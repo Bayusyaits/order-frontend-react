@@ -1,4 +1,5 @@
 import React, { memo, useContext } from 'react'
+import { X } from 'react-feather'
 import { ModalPopupStateContext, ModalPopupDispatchContext } from 'hoc/withModal'
 
 import styles from './modal.module.css'
@@ -30,7 +31,7 @@ const ModalPopup = memo(() => {
               type='button'
               className='w-8 h-8 text-gray-500'
             >
-              X
+              <X width={16} />
             </button>
           </div>
           <Child />

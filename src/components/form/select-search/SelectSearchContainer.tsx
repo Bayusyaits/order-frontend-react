@@ -103,9 +103,7 @@ const SelectSearchContainer = (props: Props) => {
       setError('input', { type: 'focus', message: 'Input is required' })
     }
   }
-  const onKeyDown = (val: any) => {
-    console.log('onKeyDown', val)
-  }
+  const onKeyDown = (val: any) => {}
   const extractData = (val: any) => {
     const items = []
     if (val && val.length > 0) {
@@ -133,7 +131,7 @@ const SelectSearchContainer = (props: Props) => {
       for (let i = 0; i < d.length; i++) {
         const el = d[i]
         if (el && el.code && el.code.toString().toLowerCase() === val.toString().toLowerCase()) {
-          str = el.name
+          str = res.showCode ? el.code : el.name
           setActiveCode(el.code)
           break
         } else if (
@@ -141,7 +139,7 @@ const SelectSearchContainer = (props: Props) => {
           el.name &&
           el.name.toString().toLowerCase() === val.toString().toLowerCase()
         ) {
-          str = el.name
+          str = res.showCode ? el.code : el.name
           setActiveCode(el.code)
           break
         }

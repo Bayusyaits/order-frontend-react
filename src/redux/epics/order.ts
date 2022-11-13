@@ -4,73 +4,114 @@ import { catchError, mergeMap } from 'rxjs/operators'
 
 import { ORDER_GET, ORDER_POST } from 'constants/endpoints'
 import {
-  ORDER_FETCH,
-  orderPayloadReset,
-  orderFetchFailure,
-  orderPostSuccess,
-  orderPostFailure,
+  ORDER_HISTORY_GET,
+  ORDER_HISTORY_DETAIL_GET,
+  ORDER_SUBMIT_POST,
+  orderHistoryDetailGetSuccess,
+  orderHistoryDetailGetFailure,
+  orderHistoryGetSuccess,
+  orderHistoryGetFailure,
+  orderSubmitPostSuccess,
+  orderSubmitPostFailure,
 } from 'redux/ducks/order'
-import { snackbarError } from 'redux/ducks/snackbar'
+import { snackbarError, snackbarOpen } from 'redux/ducks/snackbar'
 
-const noDataFetched = (name: string) => `No ${name} fetched`
-
-export const orderFetchEpic: CustomEpic = (action$: any, state$: any, { api }) =>
+export const orderHistoryGetEpic: CustomEpic = (action$: any, state$: any, { api }) =>
   action$.pipe(
-    ofType(ORDER_FETCH),
+    ofType(ORDER_HISTORY_GET),
     mergeMap((action: any) => {
       return api({
         endpoint: ORDER_GET,
         ...action.payload,
       }).pipe(
         mergeMap(({ response }) => {
-          console.log('response', response)
-          throw new Error(noDataFetched('lots'))
+          const arr: any = response.data && response.data.data ? response.data.data : response.data
+          return of(
+            snackbarOpen({
+              id: Math.random().toString(4).substr(2, 5),
+              code: 200,
+              message: 'data customer berhasil di load',
+            }),
+            orderHistoryGetSuccess(arr),
+          )
         }),
-        catchError((err) => of(orderFetchFailure(), snackbarError({
-          id: '15001',
-          code: err.response && err.response.code ? err.response.code  : JSON.stringify(err),
-          message: err.response && err.response.message ? err.response.message  : JSON.stringify(err)
-        }))),
+        catchError((err) =>
+          of(
+            orderHistoryGetFailure(),
+            snackbarError({
+              id: '15004',
+              code: err.response && err.response.code ? err.response.code : JSON.stringify(err),
+              message:
+                err.response && err.response.message ? err.response.message : JSON.stringify(err),
+            }),
+          ),
+        ),
       )
     }),
   )
 
-export const orderPostEpic: CustomEpic = (action$: any, state$: any, { api }) =>
+export const orderHistoryDetailGetEpic: CustomEpic = (action$: any, state$: any, { api }) =>
   action$.pipe(
-    ofType(ORDER_POST),
+    ofType(ORDER_HISTORY_DETAIL_GET),
     mergeMap((action: any) => {
-      const {order: payload, closeModal} = action.payload
-      const {
-        orderNumber,
-        orderProduct: { code },
-      } = state$.value.order.payload
-      payload.orderNumber = orderNumber
-      payload.orderProduct.code = code
+      return api({
+        endpoint: ORDER_GET,
+        ...action.payload,
+      }).pipe(
+        mergeMap(({ response }) => {
+          const arr: any = response.data && response.data.data ? response.data.data : response.data
+          return of(orderHistoryDetailGetSuccess(arr))
+        }),
+        catchError((err) =>
+          of(
+            orderHistoryDetailGetFailure(),
+            snackbarError({
+              id: Math.random().toString(4).substr(2, 5),
+              code: err.response && err.response.code ? err.response.code : JSON.stringify(err),
+              message:
+                err.response && err.response.message ? err.response.message : JSON.stringify(err),
+            }),
+          ),
+        ),
+      )
+    }),
+  )
+
+export const orderSubmitPostEpic: CustomEpic = (action$: any, state$: any, { api }) =>
+  action$.pipe(
+    ofType(ORDER_SUBMIT_POST),
+    mergeMap((action: any) => {
+      const payload = action.payload
       return api({
         endpoint: ORDER_POST,
-        params: {
-          uri: 'product',
-        },
         body: {
-          value: JSON.stringify(payload)
+          value: JSON.stringify(payload),
         },
       }).pipe(
         mergeMap(({ response }) => {
-          const {data, code} = response.data
+          const { data, code } = response
           if (code === 200) {
-            of(
-              orderPostSuccess(data),
-              orderPayloadReset(),
-              closeModal()
+            return of(
+              orderSubmitPostSuccess(data),
+              snackbarOpen({
+                id: Math.random().toString(4).substr(2, 5),
+                code: 200,
+                message: 'order berhasil ditambahkan',
+              }),
             )
           }
-          throw new Error(noDataFetched('lots'))
         }),
-        catchError((err) => of(orderPostFailure(), snackbarError({
-          id: '15002',
-          code: err.response && err.response.code ? err.response.code  : JSON.stringify(err),
-          message: err.response && err.response.message ? err.response.message  : JSON.stringify(err)
-        }))),
+        catchError((err) =>
+          of(
+            orderSubmitPostFailure(),
+            snackbarError({
+              id: Math.random().toString(4).substr(2, 5),
+              code: err.response && err.response.code ? err.response.code : JSON.stringify(err),
+              message:
+                err.response && err.response.message ? err.response.message : JSON.stringify(err),
+            }),
+          ),
+        ),
       )
     }),
   )

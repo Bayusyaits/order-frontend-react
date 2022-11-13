@@ -77,15 +77,14 @@ const SelectSearch = (props: any) => {
   }
   const activeScroll = () => {
     const el: any = document.getElementById(`select-${id}`)
-    if (el && active) {
-      const input: any = el.getBoundingClientRect()
+    if (el && active && isFix) {
       const option = document.getElementById(`select-${id}--wrapper`)
       if (option) {
         option.style.position = 'fixed'
         option.style.zIndex = '50'
         option.style.backgroundColor = 'inherit'
-        option.style.width = `${parseInt(input.width)}px`
-        option.style.left = `${parseInt(input.left)}px`
+        option.style.width = `auto`
+        option.style.left = `inherit`
       }
     }
   }

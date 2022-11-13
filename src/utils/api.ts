@@ -28,14 +28,14 @@ function generateUrl(urlString: string, params = {}, query?: Record<string, unkn
 }
 
 function generateHeaders(contentType: string = 'application/json', lang: string = 'id') {
-  const appSignature = import.meta.env.VITE_APP_APIREFRESHSIGNATURE
-  const loginData = getLoginData()
+  const appSignature = import.meta.env.VITE_APP_APISIGNATURE
+  const { token } = getLoginData()
   const headers = {
     'Access-Control-Allow-Origin': '*',
     'Content-Type': contentType,
     Accept: contentType,
     'Accept-Language': lang,
-    Authorization: `Bearer ${loginData ? loginData : ''}`,
+    Authorization: `Bearer ${token ? token : ''}`,
     'X-Signature': appSignature,
   }
   return headers
@@ -56,13 +56,13 @@ export default function api(options: Options) {
   // const proxyUrl = 'http://localhost/call'
   const h = generateHeaders()
   if (headers && Object.keys(headers).length > 0) {
-    Object.assign(h, {...headers})
+    Object.assign(h, { ...headers })
   }
   const obj = {
     method,
     headers: h,
     url,
-    body
+    body,
   }
   return ajax(obj)
 }

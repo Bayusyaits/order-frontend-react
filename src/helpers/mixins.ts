@@ -6,11 +6,14 @@ export const currencyFormat = (number: number) => {
   const numberMatch = numberSplit[0].substr(numberMod).match(/\d{3}/gi)
 
   if (numberMatch) {
-      const separator = numberMod ? '.' : ''
-      idr += separator + numberMatch.join('.')
+    const separator = numberMod ? '.' : ''
+    idr += separator + numberMatch.join('.')
   }
 
   idr = numberSplit[1] !== undefined ? `${idr},${numberSplit[1]}` : idr
 
   return `Rp ${idr}`
 }
+
+export const createUniqueKey = () =>
+  `key-${Math.random() * 100}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
