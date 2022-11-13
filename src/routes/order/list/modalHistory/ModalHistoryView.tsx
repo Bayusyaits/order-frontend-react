@@ -2,7 +2,6 @@ import React from 'react'
 import Row from './row'
 
 export const ModalHistoryView = (props: any) => {
-  console.log('props', props)
   const { handleLoad, ...obj } = props
   return (
     <>

@@ -67,7 +67,6 @@ const OrderListContainer = () => {
   const { errors } = formState
   const handleHistory = (data: any) => {
     const onFinish = (val: any) => {
-      console.log('finish', val)
       dispatch(
         orderHistoryDetailGet({
           number: val,
@@ -82,7 +81,6 @@ const OrderListContainer = () => {
       },
       component: () => <ModalHistory onFinish={onFinish} />,
       onClose: () => {
-        console.log('close')
         closeModal()
       },
     })
@@ -104,7 +102,6 @@ const OrderListContainer = () => {
     let totalQty = 0
     let totalCharge = 0
     let totalWeight = 0
-    console.log('datanya', data)
     if (d && d.length > 0) {
       for (let k = 0; k < d.length; k++) {
         if (data[`items[${k}].productCode`]) {
