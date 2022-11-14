@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import DatePicker, { registerLocale } from 'react-datepicker'
 import id from 'date-fns/locale/id'
+import { Link } from 'react-router-dom'
 registerLocale('id', id)
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -24,20 +25,25 @@ const OrderListView = (props: any) => {
     transactionDate,
   } = props
   const [startDate, setStartDate] = useState(transactionDate || new Date())
-  const [name, setName] = useState(customerName)
   return (
     <>
       <form onSubmit={(e) => handleSubmit(handleSave(e))} className='content'>
         <div className='intro-y flex flex-col sm:flex-row items-center mt-8'>
           <h2 className='text-lg font-medium mr-auto'>Order</h2>
           <div className='w-full sm:w-auto flex mt-4 sm:mt-0'>
+            <Link
+              to={'/logout'}
+              type='button'
+              className='btn box btn-secondary flex items-center mr-2'
+            >
+              Logout
+            </Link>
             <button
               onClick={handleHistory}
               type='button'
               className='btn box text-gray-700 dark:text-gray-300 flex items-center'
             >
-              {' '}
-              History{' '}
+              History
             </button>
           </div>
         </div>

@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
-
-import { INITIAL_STATE, userLogin } from 'redux/ducks/user'
-
+import React from 'react'
+import { removeLoginData } from 'utils/token'
 function LogoutContainer() {
-  window.location.href = '/'
+  removeLoginData()
+  window.location.href = '/login'
   return <div>Logout</div>
 }
 
