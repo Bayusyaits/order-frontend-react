@@ -9,12 +9,13 @@ import Row from './row'
 
 const OrderListView = (props: any) => {
   const {
-    totalCharge,
+    fieldArray,
     handleAdd,
     handleDelete,
     handleHistory,
     handleSubmit,
     handleSave,
+    control,
     watch,
     product,
     register,
@@ -54,7 +55,7 @@ const OrderListView = (props: any) => {
                   >
                     <label className='form-label'>Nama Customer</label>
                     <input
-                      id='regular-form-1'
+                      id='customerName'
                       {...register('customerName')}
                       name='customerName'
                       defaultValue={props.customerName}
@@ -74,6 +75,7 @@ const OrderListView = (props: any) => {
                       selected={startDate}
                       onChange={(date: any) => setStartDate(date)}
                       name='transactionDate'
+                      id='transactionDate'
                       dateFormat='yyyy-MM-dd HH:mm:ss'
                       locale='id'
                       className='form-control'
@@ -83,11 +85,12 @@ const OrderListView = (props: any) => {
                   <div className='mt-2 input-form'>
                     <label className='form-label'>Total Header</label>
                     <input
+                      {...register('totalCharge')}
+                      id='totalCharge'
+                      name='totalCharge'
                       disabled
                       readOnly
-                      id='regular-form-3'
                       type='text'
-                      value={totalCharge}
                       className='form-control'
                       placeholder='Total Header'
                     />
@@ -109,6 +112,8 @@ const OrderListView = (props: any) => {
             register={register}
             watch={watch('items')}
             errors={errors}
+            control={control}
+            fieldArray={fieldArray}
             product={product}
             handleAdd={handleAdd}
             handleDelete={handleDelete}

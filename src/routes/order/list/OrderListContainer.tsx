@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react'
 import { shallowEqual, useDispatch, useSelector } from 'react-redux'
-import { useForm } from 'react-hook-form'
+import { useForm, useFieldArray, Controller, useWatch } from 'react-hook-form'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useModal, ModalPopupDispatchContext } from 'hoc/withModal'
@@ -24,10 +24,7 @@ const OrderListContainer = () => {
   const dispatch = useDispatch()
   const { closeModal, onSubmitModal } = useContext(ModalPopupDispatchContext)
   const { payload, product } = useSelector(selectOrderListData, shallowEqual)
-  let initialState = { ...payload }
-  useEffect(() => {
-    initialState = payload
-  }, [payload])
+  const defaultValues = { ...payload }
   const schema = yup
     .object({
       customerName: yup.string().required('Nama Customer harus diisi'),
@@ -49,8 +46,24 @@ const OrderListContainer = () => {
     .required()
   const { register, watch, setValue, setError, control, handleSubmit, formState } = useForm({
     mode: 'all',
-    defaultValues: initialState,
+    defaultValues,
     resolver: yupResolver(schema),
+  })
+  useEffect(() => {
+    const { totalCharge, totalQty, totalWeight, items, number, customerName, transactionDate } =
+      payload
+    setValue('customerName', customerName)
+    setValue('transactionDate', transactionDate)
+    setValue('number', number)
+    setValue('totalWeight', totalWeight)
+    setValue('totalQty', totalQty)
+    setValue('totalCharge', totalCharge)
+    setValue('items', items)
+  }, [payload])
+  const watchAllFields = watch()
+  const fieldArray = useFieldArray({
+    control,
+    name: 'items',
   })
   useEffect(() => {
     const o = {
@@ -65,6 +78,42 @@ const OrderListContainer = () => {
     }
   }, [])
   const { errors } = formState
+
+  const validateItems = () => {
+    const p = { ...watchAllFields }
+    const { items } = p
+    let bool = false
+    if (items && items.length > 0) {
+      for (let k = 0; k < items.length; k++) {
+        const { productCode, name, price, totalQty } = items[k]
+        if (!productCode) {
+          bool = true
+          setError(`items.${k}.productCode`, { type: 'focus', message: 'Kode Barang harus diisi' })
+        } else {
+          setError(`items.${k}.productCode`, { type: 'focus', message: '' })
+        }
+        if (!price) {
+          bool = true
+          setError(`items.${k}.price`, { type: 'focus', message: 'Harga harus diisi' })
+        } else {
+          setError(`items.${k}.price`, { type: 'focus', message: '' })
+        }
+        if (!totalQty) {
+          bool = true
+          setError(`items.${k}.totalQty`, { type: 'focus', message: 'Quantity barang harus diisi' })
+        } else {
+          setError(`items.${k}.totalQty`, { type: 'focus', message: '' })
+        }
+        if (!name) {
+          bool = true
+          setError(`items.${k}.name`, { type: 'focus', message: 'Nama barang harus diisi' })
+        } else {
+          setError(`items.${k}.name`, { type: 'focus', message: '' })
+        }
+      }
+    }
+    return bool
+  }
   const handleHistory = (data: any) => {
     const onFinish = (val: any) => {
       dispatch(
@@ -88,53 +137,51 @@ const OrderListContainer = () => {
   const handleSave = (e: any) => {
     e.preventDefault()
     const { target } = e
-    const form = new FormData(target)
-    const transactionDate = form.get('transactionDate')
-    const data = Object.fromEntries(new FormData(e.target).entries())
-    if (errors.transactionDate?.message && transactionDate) {
-      setError('transactionDate', { type: 'focus', message: '' })
-    } else if (!transactionDate) {
-      setError('transactionDate', { type: 'focus', message: 'Transaction Date harus diisi' })
-    }
-    const p = { ...initialState }
-    const items = []
-    const d = initialState.items
+    const formData = new FormData(target)
+    const data = Object.fromEntries(formData.entries())
+    const p = { ...watchAllFields }
+    const { number, items } = p
+    const s = defaultValues.items
     let totalQty = 0
     let totalCharge = 0
     let totalWeight = 0
-    if (d && d.length > 0) {
-      for (let k = 0; k < d.length; k++) {
-        if (data[`items[${k}].productCode`]) {
-          const qty = Number(data[`items[${k}].totalQty`])
-          const price = Number(data[`items[${k}].price`])
-          totalQty += qty
-          totalCharge += Number(qty * price)
-          totalWeight += Number(d[k].weight * qty)
-          items.push({
-            ...d[k],
-            totalQty: qty,
-            name: data[`items[${k}].name`],
-            totalWeight: Number(d[k].weight * qty),
-            price,
-            total: Number(qty * price),
-          })
+    let bool = validateItems()
+    if (errors.transactionDate?.message && data['transactionDate']) {
+      setError('transactionDate', { type: 'focus', message: '' })
+    } else if (!data['transactionDate']) {
+      bool = true
+      setError('transactionDate', { type: 'focus', message: 'Transaction Date harus diisi' })
+    }
+    if (!bool) {
+      for (let k = 0; k < items.length; k++) {
+        const { totalQty: qty } = items[k]
+        let total = 0
+        const idTotal = document.getElementById(`items.${k}.total`)
+        if (idTotal) {
+          total = +idTotal.value
         }
+        const weight = +s[k].weight
+        totalQty += +qty
+        totalCharge += +total
+        totalWeight += Number(weight * qty)
       }
+      p.totalCharge = totalCharge
+      p.totalWeight = totalWeight
+      if (!number || number === '') {
+        p.number = `1${Math.random().toString(4).substr(2, 7)}`
+      }
+      p.totalQty = totalQty
+      setValue('totalCharge', totalCharge)
+      p.transactionDate = data['transactionDate']
+      dispatch(orderSubmitPost(p))
     }
-    if (data[`customerName`]) {
-      p.customerName = data[`customerName`]
-    }
-    p.totalCharge = totalCharge
-    p.totalWeight = totalWeight
-    p.number = Math.random().toString(4).substr(2, 9)
-    p.totalQty = totalQty
-    if (transactionDate) {
-      p.transactionDate = transactionDate
-    }
-    p.items = items
-    dispatch(orderSubmitPost(p))
   }
-  const handleAdd = (k: number) => dispatch(orderItemAdd(k))
+  const handleAdd = (k: number) => {
+    const bool = validateItems()
+    if (!bool) {
+      dispatch(orderItemAdd(k))
+    }
+  }
   const handleDelete = (k: number) => dispatch(orderItemDelete(k))
   const action = {
     handleSave,
@@ -145,12 +192,13 @@ const OrderListContainer = () => {
   return (
     <OrderListView
       {...action}
-      {...initialState}
+      {...defaultValues}
       product={product}
       register={register}
       control={control}
       errors={errors}
       watch={watch}
+      fieldArray={fieldArray}
       setValue={setValue}
       handleSubmit={handleSubmit}
     />

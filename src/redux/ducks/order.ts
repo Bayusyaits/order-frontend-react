@@ -20,8 +20,8 @@ export const ORDER_ITEM_UPDATE = 'order/ITEM_UPDATE'
 export const ORDER_PAYLOAD_RESET = 'order/PAYLOAD_RESET'
 
 export interface PayloadItemState {
-  productCode: string
-  name: string
+  productCode: string | null
+  name: string | null
   price: number
   qty: number
   weight: number
@@ -66,8 +66,8 @@ export interface OrderState {
 }
 
 export const RESET_PAYLOAD_ITEM = {
-  productCode: '',
-  name: '',
+  productCode: null,
+  name: null,
   price: 0,
   qty: 0,
   weight: 0,
