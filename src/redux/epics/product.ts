@@ -16,6 +16,13 @@ export const productFetchEpic: CustomEpic = (action$: any, state$: any, { api })
       }).pipe(
         mergeMap(({ response }) => {
           const arr: any = response.data && response.data.data ? response.data.data : response.data
+          if (!arr || !arr.body || arr.body.length === 0) {
+            return of(snackbarError({
+              id: Math.random().toString(4).substr(2, 5),
+              code: 404,
+              message: 'Barang tidak ditemukan',
+            }))
+          }
           return of(productFetchSuccess(arr))
         }),
         catchError((err) =>

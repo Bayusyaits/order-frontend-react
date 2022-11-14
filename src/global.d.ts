@@ -1,6 +1,5 @@
 import React from "react";
 import { Epic } from "redux-observable";
-import "@testing-library/jest-dom/extend-expect"
 
 import { AppState, EpicDependencies } from "redux/configureStore";
 

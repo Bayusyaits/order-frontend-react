@@ -9,9 +9,8 @@ import * as yup from 'yup'
 import { productFetch } from 'redux/ducks/product'
 import {
   orderSubmitPost,
-  orderItemAdd,
-  orderItemDelete,
   orderHistoryDetailGet,
+  RESET_PAYLOAD_ITEM
 } from 'redux/ducks/order'
 import { selectOrderListData } from './orderListSelector'
 import ModalHistory from './modalHistory'
@@ -141,7 +140,6 @@ const OrderListContainer = () => {
     const data = Object.fromEntries(formData.entries())
     const p = { ...watchAllFields }
     const { number, items } = p
-    const s = defaultValues.items
     let totalQty = 0
     let totalCharge = 0
     let totalWeight = 0
@@ -152,6 +150,12 @@ const OrderListContainer = () => {
       bool = true
       setError('transactionDate', { type: 'focus', message: 'Transaction Date harus diisi' })
     }
+    if (errors.transactionDate?.message && data['customerName']) {
+      setError('customerName', { type: 'focus', message: '' })
+    } else if (!data['customerName']) {
+      bool = true
+      setError('customerName', { type: 'focus', message: 'Nama Customer harus diisi' })
+    }
     if (!bool) {
       for (let k = 0; k < items.length; k++) {
         const { totalQty: qty } = items[k]
@@ -160,7 +164,7 @@ const OrderListContainer = () => {
         if (idTotal) {
           total = +idTotal.value
         }
-        const weight = +s[k].weight
+        const weight = +items[k].weight
         totalQty += +qty
         totalCharge += +total
         totalWeight += Number(weight * qty)
@@ -179,10 +183,10 @@ const OrderListContainer = () => {
   const handleAdd = (k: number) => {
     const bool = validateItems()
     if (!bool) {
-      dispatch(orderItemAdd(k))
+      fieldArray.append(RESET_PAYLOAD_ITEM)
     }
   }
-  const handleDelete = (k: number) => dispatch(orderItemDelete(k))
+  const handleDelete = (k: number) => fieldArray.remove(k)
   const action = {
     handleSave,
     handleHistory,
